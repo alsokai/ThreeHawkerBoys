@@ -1,3 +1,116 @@
 <!DOCTYPE html>
-<!-- HTML content trimmed for brevity. It will be restored in the actual file. -->
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Hawker Boys Menu</title>
+  <style>
+    body { font-family: 'Kanit', sans-serif; margin: 0; background: #fffaf5; color: #2e2e2e; }
+    header { background: linear-gradient(90deg, #861313, #1800ad); color: white; padding: 1rem; text-align: center; }
+    header img { width: 80px; vertical-align: middle; margin-right: 1rem; }
+    .section-title { margin: 2rem 1rem 1rem; font-size: 1.6rem; border-bottom: 2px solid #861313; display: inline-block; }
+    .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; padding: 1rem; }
+    .menu-item { background: white; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .menu-item img { width: 100%; border-radius: 12px; margin-bottom: 0.5rem; object-fit: cover; height: 150px; }
+    .menu-item h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+    .menu-item .stock, .menu-item .price { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .menu-item input[type="number"] { width: 60px; padding: 0.3rem; border: 1px solid #ccc; border-radius: 4px; margin-top: 0.3rem; }
+    .menu-item button {
+      background: #861313; color: white; border: none; padding: 0.5rem 1rem;
+      border-radius: 6px; cursor: pointer; margin-top: auto;
+    }
+    .menu-item button:hover { background: #a31a1a; }
+    .table-select { margin: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    select, input[type="text"] { padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Three Hawker Boys Logo">
+    <h1 style="display:inline-block; vertical-align: middle;">Three Hawker Boys</h1>
+    <p>สั่งอาหาร Take Away ได้ที่นี่</p>
+  </header>
+
+  <div class="table-select">
+    <label for="table">เลือกโต๊ะ:</label>
+    <select id="table">
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="Take Away">Take Away</option>
+      <option value="1">โต๊ะ 1</option>
+      <option value="2">โต๊ะ 2</option>
+      <option value="3">โต๊ะ 3</option>
+      <option value="4">โต๊ะ 4</option>
+      <option value="5">โต๊ะ 5</option>
+    </select>
+    <label for="note">เพิ่มเติม:</label>
+    <input type="text" id="note" placeholder="เช่น ไม่เผ็ด เพิ่มไข่">
+  </div>
+
+  <section>
+    <h2 class="section-title">เมนูอาหาร</h2>
+    <div class="menu-list">
+      <div class="menu-item">
+        <img src="images/garlic_steak.jpg" alt="Garlic Butter Steak">
+        <h3>Garlic Butter Steak And Potatoes</h3>
+        <div class="price">ราคา: 189 บาท</div>
+        <div class="stock">เหลือ: <span id="stock-garlic">3</span> จาน</div>
+        <label>จำนวน:</label>
+        <input type="number" id="qty-garlic" min="1" max="3" value="1">
+        <button onclick="order('Garlic Butter Steak And Potatoes', 'garlic')">สั่งเลย</button>
+      </div>
+      <div class="menu-item">
+        <img src="images/meat_me.jpg" alt="Meat Me at 12AM">
+        <h3>Meat Me at 12AM</h3>
+        <div class="price">ราคา: 175 บาท</div>
+        <div class="stock">เหลือ: <span id="stock-meat">2</span> จาน</div>
+        <label>จำนวน:</label>
+        <input type="number" id="qty-meat" min="1" max="2" value="1">
+        <button onclick="order('Meat Me at 12AM', 'meat')">สั่งเลย</button>
+      </div>
+      <div class="menu-item">
+        <img src="images/chicken_vesuvio.jpg" alt="Chicken Vesuvio">
+        <h3>Chicken Vesuvio</h3>
+        <div class="price">ราคา: 160 บาท</div>
+        <div class="stock">เหลือ: <span id="stock-vesuvio">4</span> จาน</div>
+        <label>จำนวน:</label>
+        <input type="number" id="qty-vesuvio" min="1" max="4" value="1">
+        <button onclick="order('Chicken Vesuvio', 'vesuvio')">สั่งเลย</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const stockData = {
+      garlic: 3,
+      meat: 2,
+      vesuvio: 4
+    };
+
+    function order(item, id) {
+      const table = document.getElementById("table").value;
+      const note = document.getElementById("note").value;
+      const qtyInput = document.getElementById(`qty-${id}`);
+      const qty = parseInt(qtyInput.value);
+
+      if (!table) {
+        alert("กรุณาเลือกโต๊ะก่อนสั่งอาหาร");
+        return;
+      }
+      if (qty > stockData[id]) {
+        alert("จำนวนที่สั่งเกินสต็อกที่มีอยู่");
+        return;
+      }
+
+      const message = `📦 คำสั่งซื้อจากโต๊ะ ${table}: ${item} จำนวน ${qty} จาน\n📋 เพิ่มเติม: ${note || '-'}\n📅 เวลา: ${new Date().toLocaleTimeString()}`;
+      const encoded = encodeURIComponent(message);
+
+      stockData[id] -= qty;
+      document.getElementById(`stock-${id}`).innerText = stockData[id];
+      qtyInput.max = stockData[id];
+
+      window.open(`https://discord.com/api/webhooks/your_webhook_url_here?content=${encoded}`, '_blank');
+    }
+  </script>
+</body>
 </html>
