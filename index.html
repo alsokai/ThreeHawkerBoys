@@ -141,6 +141,18 @@
 
       window.open(`https://discord.com/api/webhooks/your_webhook_url_here?content=${encoded}`, '_blank');
     }
-  </script>
+</script>
+  <script>
+function order(item) {
+  const message = {
+    content: `📦 มีคำสั่งซื้อใหม่: ${item}`
+  };
+  fetch("https://discord.com/api/webhooks/1400864494950809620/wWc9tcurZxmXXQmh3kEhAuw11cWe0WVIQlaUiZdc_IMVDSyS9zlQXgsCElIIXLsRDhfV", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(message)
+  }).then(() => alert("ส่งคำสั่งซื้อไปที่ Discord แล้ว!"));
+}
+</script>
 </body>
 </html>
