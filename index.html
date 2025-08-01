@@ -11,7 +11,7 @@
     body { font-family: 'Kanit', sans-serif; margin: 0; background: #102339; color: #FFFFFF; }
     header { background: #102339; padding: 1rem; text-align: center; }
     header img { width: 80px; vertical-align: middle; margin-right: 1rem; }
-    .section-title { margin: 2rem 1rem 1rem; font-size: 1.6rem; border-bottom: 2px solid #102339; display: inline-block; }
+    .section-title { margin: 2rem 1rem 1rem; font-size: 1.6rem; border-bottom: 2px solid #102339; color: #FFFFFF; display: inline-block; }
     .menu-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; padding: 1rem; }
     .menu-item { background: white; font color: #102339; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; }
 
@@ -97,6 +97,15 @@
         <div class="amounts">จำนวน:</div>
         <input type="number" id="qty-vesuvio" min="1" max="4" value="1">
         <button onclick="order('Chicken Vesuvio', 'vesuvio')">สั่งเลย</button>
+      </div>
+      <div class="menu-item">
+        <img src="https://i.postimg.cc/t45kN2Pc/salad.png" alt="Sister's silence salad">
+        <h3>Sister's silence salad</h3>
+        <div class="price">ราคา: 239 LSD</div>
+        <div class="stock">เหลือ: <span id="stock-salad">3</span> จาน</div>
+        <div class="amounts">จำนวน:</div>
+        <input type="number" id="qty-garlic" min="1" max="3" value="1">
+        <button onclick="order('Sister's silence salad', 'salad')">สั่งเลย</button>
       </div>
     </div>
   </section>
