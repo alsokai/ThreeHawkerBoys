@@ -78,7 +78,7 @@
         <div class="stock">เหลือ: <span id="stock-garlic">3</span> จาน</div>
         <div class="amounts">จำนวน:</div>
         <input type="number" id="qty-garlic" min="1" max="3" value="1">
-        <button onclick="order('Garlic Butter Steak And Potatoes', 'garlic')">สั่งเลย</button>
+        <button onclick="order('Garlic Butter Steak And Potatoes', 'garlic')">ออเดอร์</button>
       </div>
       <div class="menu-item">
         <img src="https://i.postimg.cc/fTFKyGwM/PizzA1.png" alt="Meat Me at 12AM">
@@ -87,7 +87,7 @@
         <div class="stock">เหลือ: <span id="stock-meat">2</span> จาน</div>
         <div class="amounts">จำนวน:</div>
         <input type="number" id="qty-meat" min="1" max="2" value="1">
-        <button onclick="order('Meat Me at 12AM', 'meat')">สั่งเลย</button>
+        <button onclick="order('Meat Me at 12AM', 'meat')">order</button>
       </div>
       <div class="menu-item">
         <img src="https://i.postimg.cc/rmJQ7XjL/chickenvesuvio.png" alt="Chicken Vesuvio">
@@ -96,7 +96,7 @@
         <div class="stock">เหลือ: <span id="stock-vesuvio">4</span> จาน</div>
         <div class="amounts">จำนวน:</div>
         <input type="number" id="qty-vesuvio" min="1" max="4" value="1">
-        <button onclick="order('Chicken Vesuvio', 'vesuvio')">สั่งเลย</button>
+        <button onclick="order('Chicken Vesuvio', 'vesuvio')">order</button>
       </div>
       <div class="menu-item">
         <img src="https://i.postimg.cc/t45kN2Pc/salad.png" alt="Sister's silence salad">
@@ -105,42 +105,79 @@
         <div class="stock">เหลือ: <span id="stock-salad">3</span> จาน</div>
         <div class="amounts">จำนวน:</div>
         <input type="number" id="qty-garlic" min="1" max="3" value="1">
-        <button onclick="order('Sister's silence salad', 'salad')">สั่งเลย</button>
+        <button onclick="order('Sister's silence salad', 'salad')">order</button>
       </div>
     </div>
   </section>
 
-  <script>
-    const stockData = {
-      garlic: 3,
-      meat: 2,
-      vesuvio: 4
-    };
+<script>
+  const stockData = {
+    garlic: 3,
+    meat: 2,
+    vesuvio: 4
+  };
 
-    function order(item, id) {
-      const table = document.getElementById("table").value;
-      const note = document.getElementById("note").value;
-      const qtyInput = document.getElementById(`qty-${id}`);
-      const qty = parseInt(qtyInput.value);
+  const cart = [];
 
-      if (!table) {
-        alert("กรุณาเลือกโต๊ะก่อนสั่งอาหาร");
-        return;
-      }
-      if (qty > stockData[id]) {
-        alert("จำนวนที่สั่งเกินสต็อกที่มีอยู่");
-        return;
-      }
+  function addToCart(item, id) {
+    const qtyInput = document.getElementById(`qty-${id}`);
+    const qty = parseInt(qtyInput.value);
+    const stock = stockData[id];
 
-      const message = `📦 คำสั่งซื้อจากโต๊ะ ${table}: ${item} จำนวน ${qty} จาน\n📋 เพิ่มเติม: ${note || '-'}\n📅 เวลา: ${new Date().toLocaleTimeString()}`;
-      const encoded = encodeURIComponent(message);
-
-      stockData[id] -= qty;
-      document.getElementById(`stock-${id}`).innerText = stockData[id];
-      qtyInput.max = stockData[id];
-
-      window.open(`https://discord.com/api/webhooks/1400864494950809620/wWc9tcurZxmXXQmh3kEhAuw11cWe0WVIQlaUiZdc_IMVDSyS9zlQXgsCElIIXLsRDhfV`, '_blank');
+    if (qty > stock) {
+      alert("จำนวนที่สั่งเกินสต็อกที่มีอยู่");
+      return;
     }
+
+    cart.push({ item, id, qty });
+    stockData[id] -= qty;
+
+    document.getElementById(`stock-${id}`).innerText = stockData[id];
+    qtyInput.max = stockData[id];
+
+    renderCart();
+  }
+
+  function renderCart() {
+    const orderList = document.getElementById("order-list");
+    orderList.innerHTML = "";
+    cart.forEach((entry, index) => {
+      const li = document.createElement("li");
+      li.textContent = `${entry.item} - ${entry.qty} จาน`;
+      orderList.appendChild(li);
+    });
+  }
+
+  function submitOrder() {
+    const table = document.getElementById("table").value;
+    const note = document.getElementById("note").value;
+    if (!table) {
+      alert("กรุณาเลือกโต๊ะก่อนส่งคำสั่ง");
+      return;
+    }
+    if (cart.length === 0) {
+      alert("ยังไม่มีรายการอาหาร");
+      return;
+    }
+
+    let message = `📦 คำสั่งซื้อจากโต๊ะ ${table}\n`;
+    cart.forEach(entry => {
+      message += `• ${entry.item} จำนวน ${entry.qty} จาน\n`;
+    });
+    message += `📋 เพิ่มเติม: ${note || '-'}\n📅 เวลา: ${new Date().toLocaleTimeString()}`;
+
+    const encoded = encodeURIComponent(message);
+    window.open(`https://discord.com/api/webhooks/your_webhook_url_here?content=${encoded}`, '_blank');
+
+    cart.length = 0;
+    renderCart();
+  }
 </script>
+
+<section style="padding: 1rem;">
+  <h2 class="section-title">รายการที่เลือก</h2>
+  <ul id="order-list"></ul>
+  <button onclick="submitOrder()" style="background:#1800ad;color:white;padding:0.7rem 1.5rem;border:none;border-radius:8px;font-size:1rem;margin-top:1rem;">ส่งคำสั่งซื้อ</button>
+</section>
 </body>
 </html>
